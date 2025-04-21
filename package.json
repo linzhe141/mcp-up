@@ -1,0 +1,22 @@
+{
+  "name": "mcp-cli",
+  "version": "0.0.1",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "tsx playground",
+    "prettier-lint": "prettier --write ."
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.1",
+    "dotenv": "^16.5.0",
+    "openai": "^4.85.1",
+    "prettier": "^3.5.3",
+    "tsx": "^4.19.3",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
