@@ -4,6 +4,8 @@ import allClient from "../playground/mcpup.config"
 import { createMcpClient } from "./client"
 import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { Tool } from "@modelcontextprotocol/sdk/types.js"
+import { createMcpServer } from "./server"
+import { pathToFileURL } from 'node:url';
 
 export async function start({ prompt }: { prompt: string }) {
   let formatTools: OpenAI.Chat.Completions.ChatCompletionTool[] = []
@@ -21,6 +23,8 @@ export async function start({ prompt }: { prompt: string }) {
       close: Function
     }[] = []
     for (const c of allClient) {
+      const {server} = await import(pathToFileURL(c.serverFilePath).href)
+      await createMcpServer(server)
       const { client, tools, callTool, close } = await createMcpClient({
         name: c.name,
         serverFilePath: c.serverFilePath,
