@@ -81,6 +81,18 @@ export async function startConversation({ prompt }: { prompt: string }) {
 
   async function generateChatResponse(prompt?: string) {
     if (prompt) {
+      chatMessages.push({
+        role: "system",
+        content: `You are an assistant with tool calling capabilities. Please work strictly in the following way:
+
+1. You can call multiple tools, but only one tool at a time.
+
+2. After calling the tool, I will return the result of the tool execution to you.
+
+3. Please do not try to call the next tool before getting the tool result.
+
+4. Only return one tool_call at a time, and wait for me to return the tool result before continuing.`,
+      })
       chatMessages.push({ role: "user", content: prompt })
     }
     console.log("start llm")

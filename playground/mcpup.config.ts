@@ -7,4 +7,9 @@ export default [
     type: "pure server",
     serverFilePath: path.resolve("./server/hackernews-server.ts"),
   },
+  {
+    name: "writefile",
+    type: "pure server",
+    serverFilePath: path.resolve("./server/writefile-server.ts"),
+  },
 ] satisfies McpClientConfig[]
