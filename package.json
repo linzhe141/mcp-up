@@ -4,7 +4,7 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "tsx playground",
+    "dev": "pnpm -F playground dev",
     "prettier-lint": "prettier --write ."
   },
   "dependencies": {
