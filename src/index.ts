@@ -1,11 +1,9 @@
 import llm from "./llm"
 import type OpenAI from "openai"
-import allClient from "../playground/mcpup.config"
+import inputClient from "../playground/mcpup.config"
 import { createMcpClient } from "./client"
 import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { Tool } from "@modelcontextprotocol/sdk/types.js"
-import { createMcpServer } from "./server"
-import { pathToFileURL } from 'node:url';
 
 export async function start({ prompt }: { prompt: string }) {
   let formatTools: OpenAI.Chat.Completions.ChatCompletionTool[] = []
@@ -13,25 +11,22 @@ export async function start({ prompt }: { prompt: string }) {
 
   const res = await invoke(prompt)
 
-  console.log("Response:", res)
-
+  console.log("\nres.length->", res.length)
   async function invoke(prompt: string) {
-    const clients: {
+    const mcpClients: {
       client: Client
       tools: Tool[]
       callTool: Function
       close: Function
     }[] = []
-    for (const c of allClient) {
-      const {server} = await import(pathToFileURL(c.serverFilePath).href)
-      await createMcpServer(server)
-      const { client, tools, callTool, close } = await createMcpClient({
+    for (const c of inputClient) {
+      const mcpClient = await createMcpClient({
         name: c.name,
         serverFilePath: c.serverFilePath,
       })
-      clients.push({ client, tools, callTool, close })
+      mcpClients.push(mcpClient)
     }
-    formatTools = clients
+    formatTools = mcpClients
       .map((i) => i.tools)
       .flat()
       .map((tool) => ({
@@ -48,7 +43,7 @@ export async function start({ prompt }: { prompt: string }) {
     while (true) {
       if (response.toolCalls.length > 0) {
         for (const toolCall of response.toolCalls) {
-          const mcp = clients.find(({ tools }) =>
+          const mcp = mcpClients.find(({ tools }) =>
             tools.some((t: any) => t.name === toolCall.function.name)
           )
           if (mcp) {
@@ -68,7 +63,7 @@ export async function start({ prompt }: { prompt: string }) {
         continue
       }
       // 没有工具调用,结束对话
-      for (const { client } of clients) {
+      for (const { client } of mcpClients) {
         await client.close()
       }
       return response.content

@@ -1,6 +1,12 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js"
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { Tool } from "@modelcontextprotocol/sdk/types.js"
+import { fileURLToPath } from "node:url"
+import path from "node:path"
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+const wrapFilePath = path.resolve(__dirname, "./wrap.ts")
 
 export async function createMcpClient({
   name,
@@ -39,7 +45,7 @@ export async function createMcpClient({
     try {
       const transport = new StdioClientTransport({
         command: "npx",
-        args: ["tsx", serverFilePath],
+        args: ["tsx", wrapFilePath, serverFilePath],
       })
       await client.connect(transport)
     } catch (e) {
