@@ -6,7 +6,7 @@ import path from "node:path"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-const wrapFilePath = path.resolve(__dirname, "./wrap.ts")
+const wrapFilePath = path.resolve(__dirname, "./wrap-to-start-server.ts")
 
 export async function createMcpClient({
   name,
@@ -43,10 +43,12 @@ export async function createMcpClient({
 
   async function connectToServer() {
     try {
+      // 本质就是通过一个子进程启动mcp server，通过 stdio 连接到子进程的 stdin 和 stdout
       const transport = new StdioClientTransport({
         command: "npx",
         args: ["tsx", wrapFilePath, serverFilePath],
       })
+      console.log("Connecting to MCP server...")
       await client.connect(transport)
     } catch (e) {
       console.log("Failed to connect to MCP server: ", e)

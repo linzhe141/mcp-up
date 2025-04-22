@@ -1,11 +1,11 @@
 {
-  "name": "mcp-cli",
+  "name": "mcp-up",
   "version": "0.0.1",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "pnpm -F playground dev",
-    "test-server": "pnpm -F playground test-server",
+    "debugger": "pnpm -F playground debugger",
     "prettier-lint": "prettier --write ."
   },
   "dependencies": {

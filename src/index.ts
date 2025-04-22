@@ -58,10 +58,12 @@ export async function startConversation({ prompt }: { prompt: string }) {
           if (targetClient) {
             console.log(`Executing tool: ${toolCall.function.name}`)
             console.log(`Arguments: ${toolCall.function.arguments}`)
+            console.log(`calling tool...`)
             const toolResult = await targetClient.callTool(
               toolCall.function.name,
               JSON.parse(toolCall.function.arguments)
             )
+            console.log(`Tool result: ${JSON.stringify(toolResult)}`)
             appendToolExecutionResult(toolCall.id, JSON.stringify(toolResult))
           } else {
             appendToolExecutionResult(toolCall.id, "Tool not found")
@@ -91,14 +93,14 @@ export async function startConversation({ prompt }: { prompt: string }) {
     if (prompt) {
       chatMessages.push({ role: "user", content: prompt })
     }
-
+    console.log("start llm")
     const stream = await llm.chat.completions.create({
       model: process.env.END_POINT_ID!,
       messages: chatMessages,
       stream: true,
       tools: availableTools,
     })
-
+    console.log("processing chatResponse ...")
     let content = ""
     const toolCalls: {
       id: string

@@ -1,0 +1,4 @@
+# MCP-UP
+
+> [!CAUTION]
+> JUST FOR FUN
