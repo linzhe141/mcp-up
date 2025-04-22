@@ -4,6 +4,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "tsx index.ts"
+    "dev": "tsx index.ts",
+    "test-server": "tsx test-server.ts"
+  },
+  "dependencies": {
+    "cross-spawn": "^7.0.6"
   }
 }

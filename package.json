@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "pnpm -F playground dev",
+    "test-server": "pnpm -F playground test-server",
     "prettier-lint": "prettier --write ."
   },
   "dependencies": {
