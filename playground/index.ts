@@ -1,2 +1,2 @@
-import { start } from "../src"
-start({ prompt: "获取hacknews的最新消息" })
+import { startConversation } from "../src"
+startConversation({ prompt: "获取hacknews的最新消息" })
