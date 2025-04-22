@@ -3,11 +3,7 @@ import type OpenAI from "openai"
 import { createMcpClient, type McpClient } from "./client"
 import path from "path"
 import { pathToFileURL } from "node:url"
-
-type McpClientConfig = {
-  name: string
-  serverFilePath: string
-}
+import { McpClientConfig } from "./type"
 
 export async function startConversation({ prompt }: { prompt: string }) {
   let availableTools: OpenAI.Chat.Completions.ChatCompletionTool[] = []
@@ -23,6 +19,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
       const mcpClient = await createMcpClient({
         name: clientConfig.name,
         serverFilePath: clientConfig.serverFilePath,
+        type: clientConfig.type,
       })
       mcpClients.push(mcpClient)
     }

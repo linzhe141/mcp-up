@@ -1,11 +1,10 @@
+import type { McpClientConfig } from "../src/type"
 import path from "node:path"
-import { fileURLToPath } from "url"
 
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = path.dirname(__filename)
 export default [
   {
     name: "hackernews",
-    serverFilePath: path.resolve(__dirname, "./server/hackernews-server.ts"),
+    type: "pure server",
+    serverFilePath: path.resolve("./server/hackernews-server.ts"),
   },
-]
+] satisfies McpClientConfig[]

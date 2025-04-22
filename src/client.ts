@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import { Tool } from "@modelcontextprotocol/sdk/types.js"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
+import type { McpClientConfig } from "./type"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -14,10 +15,12 @@ export async function createMcpClient({
   name,
   version = "0.0.1",
   serverFilePath,
+  type = "pure server",
 }: {
   name: string
   version?: string
   serverFilePath: string
+  type: McpClientConfig["type"]
 }) {
   const client = new Client({ name, version })
   await connectToServer()
@@ -46,10 +49,19 @@ export async function createMcpClient({
   async function connectToServer() {
     try {
       // 本质就是通过一个子进程启动mcp server，通过 stdio 连接到子进程的 stdin 和 stdout
-      const transport = new StdioClientTransport({
-        command: "npx",
-        args: ["tsx", wrapFilePath, serverFilePath],
-      })
+      let transport: StdioClientTransport = null!
+      if (type === "pure server") {
+        transport = new StdioClientTransport({
+          command: "npx",
+          args: ["tsx", wrapFilePath, serverFilePath],
+        })
+      } else if (type === "connected server") {
+        // TODO:
+        transport = new StdioClientTransport({
+          command: "npx",
+          args: ["tsx", serverFilePath],
+        })
+      }
       console.log("Connecting to MCP server...")
       await client.connect(transport)
     } catch (e) {
