@@ -1,8 +1,6 @@
 import llm from "./llm"
 import type OpenAI from "openai"
-import { createMcpClient } from "./client"
-import { Client } from "@modelcontextprotocol/sdk/client/index.js"
-import { Tool } from "@modelcontextprotocol/sdk/types.js"
+import { createMcpClient, type McpClient } from "./client"
 import path from "path"
 import { pathToFileURL } from "node:url"
 
@@ -19,12 +17,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
   await processPrompt(prompt)
 
   async function processPrompt(prompt: string) {
-    const mcpClients: {
-      client: Client
-      tools: Tool[]
-      callTool: Function
-      close: Function
-    }[] = []
+    const mcpClients: McpClient[] = []
 
     for (const clientConfig of inputClientConfig) {
       const mcpClient = await createMcpClient({

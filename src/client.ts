@@ -8,6 +8,8 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 const wrapFilePath = path.resolve(__dirname, "./wrap-to-start-server.ts")
 
+export type McpClient = Awaited<ReturnType<typeof createMcpClient>>
+
 export async function createMcpClient({
   name,
   version = "0.0.1",
