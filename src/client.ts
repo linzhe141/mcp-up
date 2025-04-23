@@ -62,7 +62,7 @@ export async function createMcpClient({
           args: ["tsx", serverFilePath],
         })
       }
-      console.log("Connecting to MCP server...")
+      console.log("`client: " + name + "` connecting to MCP server...")
       await client.connect(transport)
     } catch (e) {
       console.log("Failed to connect to MCP server: ", e)

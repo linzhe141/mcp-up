@@ -95,7 +95,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
       })
       chatMessages.push({ role: "user", content: prompt })
     }
-    console.log("start llm")
+    console.log("Initializing LLM chat completion stream...")
     const stream = await llm.chat.completions.create({
       model: process.env.END_POINT_ID!,
       messages: chatMessages,
@@ -136,6 +136,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
       }
     }
 
+    console.log("\nThe chatResponse has been processed")
     chatMessages.push({
       role: "assistant",
       content: content,
