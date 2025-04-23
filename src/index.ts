@@ -37,7 +37,13 @@ export async function startConversation({ prompt }: { prompt: string }) {
           parameters: tool.inputSchema,
         },
       }))
-    console.log("Available Tools", availableTools)
+    console.log(
+      "Available Tools",
+      availableTools.map((i) => ({
+        name: i.function.name,
+        description: i.function.description,
+      }))
+    )
 
     let chatResponse = await generateChatResponse(prompt)
 
@@ -89,6 +95,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
 
   async function generateChatResponse(prompt?: string) {
     if (prompt) {
+      console.log(chalk.bgGreenBright(`\n${prompt}\n`))
       chatMessages.push({
         role: "system",
         content: `You are an assistant with tool calling capabilities. Please work strictly in the following way:
