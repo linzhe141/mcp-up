@@ -4,6 +4,7 @@ import { Tool } from "@modelcontextprotocol/sdk/types.js"
 import { fileURLToPath } from "node:url"
 import path from "node:path"
 import type { McpClientConfig } from "./type"
+import chalk from "chalk"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -62,7 +63,9 @@ export async function createMcpClient({
           args: ["tsx", serverFilePath],
         })
       }
-      console.log("`client: " + name + "` connecting to MCP server...")
+      console.log(
+        chalk.green("`client: " + name + "` connecting to MCP server...\n")
+      )
       await client.connect(transport)
     } catch (e) {
       console.log("Failed to connect to MCP server: ", e)

@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.1",
+    "chalk": "^5.4.1",
     "dotenv": "^16.5.0",
+    "nanospinner": "^1.2.2",
     "openai": "^4.85.1",
     "prettier": "^3.5.3",
     "tsx": "^4.19.3",

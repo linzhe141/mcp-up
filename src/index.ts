@@ -4,6 +4,8 @@ import { createMcpClient, type McpClient } from "./client"
 import path from "path"
 import { pathToFileURL } from "node:url"
 import { McpClientConfig } from "./type"
+import chalk from "chalk"
+import { createSpinner } from "nanospinner"
 
 export async function startConversation({ prompt }: { prompt: string }) {
   let availableTools: OpenAI.Chat.Completions.ChatCompletionTool[] = []
@@ -46,14 +48,20 @@ export async function startConversation({ prompt }: { prompt: string }) {
             tools.some((tool) => tool.name === toolCall.function.name)
           )
           if (targetClient) {
-            console.log(`Executing tool: ${toolCall.function.name}`)
-            console.log(`Arguments: ${toolCall.function.arguments}`)
-            console.log(`calling tool...`)
+            console.log(
+              chalk.bgYellow(`\nExecuting tool: ${toolCall.function.name}`)
+            )
+            console.log(
+              chalk.yellow(`Arguments: ${toolCall.function.arguments}\n`)
+            )
+            const spinner = createSpinner("calling tool...").start()
             const toolResult = await targetClient.callTool(
               toolCall.function.name,
               JSON.parse(toolCall.function.arguments)
             )
-            console.log(`Tool result: ${JSON.stringify(toolResult)}`)
+            spinner.success({
+              text: chalk.green(`Tool result: ${JSON.stringify(toolResult)}\n`),
+            })
             appendToolExecutionResult(toolCall.id, JSON.stringify(toolResult))
           } else {
             appendToolExecutionResult(toolCall.id, "Tool not found")
@@ -95,14 +103,14 @@ export async function startConversation({ prompt }: { prompt: string }) {
       })
       chatMessages.push({ role: "user", content: prompt })
     }
-    console.log("Initializing LLM chat completion stream...")
+    console.log(chalk.green("\nInitializing LLM chat completion stream\n"))
     const stream = await llm.chat.completions.create({
       model: process.env.END_POINT_ID!,
       messages: chatMessages,
       stream: true,
       tools: availableTools,
     })
-    console.log("processing chatResponse ...")
+    const spinner = createSpinner("processing chatResponse ...").start()
     let content = ""
     const toolCalls: {
       id: string
@@ -113,6 +121,7 @@ export async function startConversation({ prompt }: { prompt: string }) {
       const delta = chunk.choices[0].delta
       // 处理普通Content
       if (delta.content) {
+        if (spinner.isSpinning()) spinner.stop()
         const contentChunk = chunk.choices[0].delta.content || ""
         content += contentChunk
         process.stdout.write(contentChunk)
@@ -136,7 +145,10 @@ export async function startConversation({ prompt }: { prompt: string }) {
       }
     }
 
-    console.log("\nThe chatResponse has been processed")
+    console.log("\n")
+    spinner.success({
+      text: chalk.green("The chatResponse has been processed"),
+    })
     chatMessages.push({
       role: "assistant",
       content: content,
