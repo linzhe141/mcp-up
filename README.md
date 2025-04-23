@@ -4,5 +4,6 @@
 > JUST FOR FUN
 
 ## PLAYGROUND
-
-![DEMO](./demo.jpg)
+<p align="center">
+   <img width="830px" src="./demo.jpg" alt="linzhe-tools Logo" />
+</p>
